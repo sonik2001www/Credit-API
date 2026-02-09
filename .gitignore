@@ -1,2 +1,6 @@
 .idea/
 .venv/
+__pycache__/
+.env
+*.pyc
+db_data/

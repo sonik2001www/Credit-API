@@ -32,8 +32,8 @@ class PlansService:
     async def insert_plans(self, file: UploadFile) -> PlanInsertResponse:
         return await self._import.insert_plans(file)
 
-    async def plans_performance(self, as_of: date) -> PlansPerformanceResponse:
-        return await self._monthly.plans_performance(as_of)
+    async def plans_performance(self, report_date: date) -> PlansPerformanceResponse:
+        return await self._monthly.plans_performance(report_date)
 
     async def year_performance(self, year: int) -> YearPerformanceResponse:
         return await self._year.year_performance(year)

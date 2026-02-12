@@ -17,6 +17,7 @@ if str(SRC) not in sys.path:
 
 from src.core.config import get_settings  # noqa: E402
 from src.core.database import Base  # noqa: E402
+import src.models  # noqa: E402,F401
 
 config = context.config
 settings = get_settings()

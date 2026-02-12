@@ -21,6 +21,8 @@ class PlansYearService:
         year_start = date(year, 1, 1)
         year_end = date(year, 12, 31)
 
+        issuance_labels = {"видача"}
+
         issuance_total = Decimal(
             await self.session.scalar(
                 select(func.coalesce(func.sum(Credit.body), 0)).where(Credit.issuance_date.between(year_start, year_end))
@@ -63,7 +65,7 @@ class PlansYearService:
                 func.coalesce(func.sum(Plan.sum), 0).label("sum_plan"),
             )
             .join(Dictionary, Plan.category_id == Dictionary.id)
-            .where(Dictionary.name.ilike("%видача%"), Plan.period.between(year_start, year_end))
+            .where(func.lower(Dictionary.name).in_(issuance_labels), Plan.period.between(year_start, year_end))
             .group_by("y", "m")
         )
         issuance_plan_by_month = {(int(r.y), int(r.m)): Decimal(r.sum_plan) for r in issuance_plan_rows}
@@ -75,7 +77,7 @@ class PlansYearService:
                 func.coalesce(func.sum(Plan.sum), 0).label("sum_plan"),
             )
             .join(Dictionary, Plan.category_id == Dictionary.id)
-            .where(Dictionary.name.ilike("%збір%"), Plan.period.between(year_start, year_end))
+            .where(~func.lower(Dictionary.name).in_(issuance_labels), Plan.period.between(year_start, year_end))
             .group_by("y", "m")
         )
         payment_plan_by_month = {(int(r.y), int(r.m)): Decimal(r.sum_plan) for r in payment_plan_rows}

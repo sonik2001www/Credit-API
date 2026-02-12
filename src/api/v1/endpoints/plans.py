@@ -22,11 +22,11 @@ async def plans_insert(
 
 @router.get("/performance", response_model=PlansPerformanceResponse)
 async def plans_performance(
-    as_of: date = Query(..., description="Date for performance calc"),
+    report_date: date = Query(..., description="Date for performance calculation"),
     session: AsyncSession = Depends(get_session),
 ) -> PlansPerformanceResponse:
     service = PlansService(session)
-    return await service.plans_performance(as_of)
+    return await service.plans_performance(report_date)
 
 
 @router.get("/year_performance", response_model=YearPerformanceResponse)

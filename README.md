@@ -53,7 +53,7 @@ Send header `X-API-Key: <value>` matching `API_KEY` env (default `dev-api-key`).
 ## Endpoints (under /api/v1)
 - `GET /user_credits/{user_id}`
 - `POST /plans/insert` (multipart/form-data with file)
-- `GET /plans/performance?as_of=YYYY-MM-DD`
+- `GET /plans/performance?report_date=YYYY-MM-DD`
 - `GET /plans/year_performance?year=YYYY`
 
 ## Project layout

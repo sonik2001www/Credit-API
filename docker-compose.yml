@@ -10,10 +10,16 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
 
   api:
     build: .
-    command: /bin/sh -c "until alembic upgrade head; do sleep 2; done; uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload"
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
       - .:/code
     environment:
@@ -24,7 +30,21 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      migrate:
+        condition: service_completed_successfully
+
+  migrate:
+    build: .
+    command: alembic upgrade head
+    volumes:
+      - .:/code
+    environment:
+      DATABASE_URL: mysql+asyncmy://root:root@db:3306/credits
+      PYTHONPATH: /code/src
+    working_dir: /code
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   db_data:

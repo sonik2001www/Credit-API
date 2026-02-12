@@ -22,13 +22,14 @@ uvicorn src.main:app --reload
 ```bash
 docker-compose up --build
 ```
-- Apply migrations (in running container):
+- Migrations are applied automatically by the `migrate` service before `api` starts.
+- To run migrations manually:
 ```bash
-docker-compose exec api alembic upgrade head
+docker-compose run --rm migrate
 ```
-- (Optional) Seed demo data (drops/recreates tables):
+- (Optional) Seed demo data after startup (drops/recreates tables):
 ```bash
-docker-compose exec api python -m scripts.seed_from_csv
+docker-compose run --rm api python -m scripts.seed_from_csv
 ```
 
 ## Seeding sample data

@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.security import api_key_auth
 from src.core.database import get_session
 from src.schemas.responses import UserCreditsResponse
-from src.services.credits_service import CreditsService
+from src.services.credits import CreditsService
 
 router = APIRouter(prefix="/user_credits", tags=["credits"], dependencies=[Depends(api_key_auth)])
 

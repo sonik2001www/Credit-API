@@ -9,32 +9,36 @@ Async FastAPI service with clean layering, API key auth, and Docker compose for 
 - MySQL 8
 - Docker / docker-compose
 
+## Run with Docker (recommended)
+```bash
+cp .env.example .env
+```
+```bash
+docker-compose up --build
+```
+- This starts `db`, then runs `migrate` (`alembic upgrade head`), then starts `api`.
+- Demo seed data (optional, recreates tables):
+```bash
+docker-compose exec api python -m scripts.seed_from_csv
+```
+- Run migrations manually (if needed):
+```bash
+docker-compose run --rm migrate
+```
+
+## Docker and .env
+- `.env` is required for Docker startup in this project.
+- `docker-compose.yml` reads `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE`, `DATABASE_URL`, and `API_KEY` from `.env`.
+
 ## Run locally
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env  # or set DATABASE_URL and API_KEY
+cp .env.example .env
+# For local app run, set DATABASE_URL host to 127.0.0.1 instead of db
+# Example: mysql+asyncmy://root:root@127.0.0.1:3306/credits
 uvicorn src.main:app --reload
-```
-
-## Run with Docker
-```bash
-docker-compose up --build
-```
-- Migrations are applied automatically by the `migrate` service before `api` starts.
-- To run migrations manually:
-```bash
-docker-compose run --rm migrate
-```
-- (Optional) Seed demo data after startup (drops/recreates tables):
-```bash
-docker-compose run --rm api python -m scripts.seed_from_csv
-```
-
-## Seeding sample data
-```bash
-python -m scripts.seed_from_csv
 ```
 
 ## Migrations (Alembic)
@@ -46,7 +50,7 @@ alembic revision --autogenerate -m "init"
 ```bash
 alembic upgrade head
 ```
-- Alembic reads `DATABASE_URL` from `.env` (configured in `migrations/env.py`).
+- Alembic reads `DATABASE_URL` from env vars or `.env` (configured in `migrations/env.py`).
 
 ## Auth
 Send header `X-API-Key: <value>` matching `API_KEY` env (default `dev-api-key`).
@@ -69,4 +73,3 @@ Send header `X-API-Key: <value>` matching `API_KEY` env (default `dev-api-key`).
 ## Notes
 - Uses async SQLAlchemy sessions and dependency injection.
 - Basic API key auth; swap with JWT easily.
-- Keep logic in services, not routers.

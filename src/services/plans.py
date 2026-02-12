@@ -10,9 +10,9 @@ from src.schemas.responses import (
     PlansPerformanceResponse,
     YearPerformanceResponse,
 )
-from src.services.plans_import_service import PlansImportService
-from src.services.plans_monthly_service import PlansMonthlyService
-from src.services.plans_year_service import PlansYearService
+from src.services.plans_import import PlansImportService
+from src.services.plans_monthly import PlansMonthlyService
+from src.services.plans_year import PlansYearService
 
 
 class PlansService:

@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.security import api_key_auth
 from src.core.database import get_session
 from src.schemas.responses import PlanInsertResponse, PlansPerformanceResponse, YearPerformanceResponse
-from src.services.plans_service import PlansService
+from src.services.plans import PlansService
 
 router = APIRouter(prefix="/plans", tags=["plans"], dependencies=[Depends(api_key_auth)])
 
